@@ -157,7 +157,7 @@ public class ControladorPoliza {
             con.close();
         } catch (SQLException e)
         {
-
+            System.out.println("Error en Select ControladorPoliza " + e);
         }
         return modeloPoliza;
     }
@@ -227,6 +227,7 @@ public class ControladorPoliza {
                     listModeloPolizas.add(modeloPoliza);
                 }
             }
+            brPerReader.close();
         } catch (IOException e)
         {
             System.out.println(e);

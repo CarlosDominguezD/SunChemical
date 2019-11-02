@@ -208,7 +208,7 @@ public class ControladorPersonas {
             File file = new File(RutaDispo);
             int CanLine = tools.ContarArchi(file);
             List<ModeloPersonas> modeloPersonas = new ArrayList<ModeloPersonas>();
-            modeloPersonas = GenerarArreglo(file, CanLine);
+            modeloPersonas = GenerarArreglo(file, CanLine);            
             int con = 0;
             ModeloPersonas mod = new ModeloPersonas();
             String estado = "True";
@@ -228,7 +228,7 @@ public class ControladorPersonas {
                             } else
                             {
                                 estado = "False";
-                                resul = "False";
+                                resul = "False";                                
                             }
                         }
                     }
@@ -266,6 +266,7 @@ public class ControladorPersonas {
                     listModeloPersonas.add(modeloPersona);
                 }
             }
+            brPerReader.close();
         } catch (IOException e)
         {
             System.out.println(e);

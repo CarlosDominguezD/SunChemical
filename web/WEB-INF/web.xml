@@ -40,6 +40,10 @@
         <servlet-name>GrupoPolizaServlet</servlet-name>
         <servlet-class>Servlet.GrupoPolizaServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ServletSunchemical</servlet-name>
+        <servlet-class>Servlet.ServletSunchemical</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UsuariosServlet</servlet-name>
         <url-pattern>/UsuariosServlet</url-pattern>
@@ -79,6 +83,10 @@
     <servlet-mapping>
         <servlet-name>GrupoPolizaServlet</servlet-name>
         <url-pattern>/GrupoPolizaServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServletSunchemical</servlet-name>
+        <url-pattern>/ServletSunchemical</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

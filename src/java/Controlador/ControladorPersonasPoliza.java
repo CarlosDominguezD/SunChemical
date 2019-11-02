@@ -14,6 +14,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -23,12 +25,14 @@ public class ControladorPersonasPoliza {
 
     public boolean Insert(ModeloPersonasPolizas modeloPersonasPolizas) {
         boolean resul = false;
-        try {
+        try
+        {
             ConexionBDMySql conexion = new ConexionBDMySql();
             Connection con;
             con = conexion.abrirConexion();
             PreparedStatement SQL = null;
-            try {
+            try
+            {
                 SQL = con.prepareStatement("INSERT INTO `personas_poliza`(`IdPersonas`,`IdPoliza`,`ValorPoliza`,"
                         + "`FechaInicio`,`FechaFin`,`Observacion`,`Activo`,`CodigoPoliza`) "
                         + "VALUE (?,?,?,?,?,?,?,?);");
@@ -41,21 +45,24 @@ public class ControladorPersonasPoliza {
                 SQL.setString(6, modeloPersonasPolizas.getObservacion());
                 SQL.setString(7, modeloPersonasPolizas.getActivo());
                 SQL.setInt(8, modeloPersonasPolizas.getCodigoPoliza().getId());
-                if (SQL.executeUpdate() > 0) {
+                if (SQL.executeUpdate() > 0)
+                {
                     resul = true;
                 }
-            } catch (SQLException e) {
+            } catch (SQLException e)
+            {
                 System.out.println(e);
             }
             SQL.close();
             con.close();
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             System.out.println(e);
         }
         return resul;
     }
 
-    ModeloPersonasPolizas SelectIdPersonaIdPolizaNomina(String CedulaPersona, String CodigoPoliza) {
+    public ModeloPersonasPolizas SelectIdPersonaIdPolizaNomina(String CedulaPersona, String CodigoPoliza) {
         ModeloPersonasPolizas modeloPersonasPolizas = new ModeloPersonasPolizas();
         ModeloPersonas modeloPesonas = new ModeloPersonas();
         ModeloPoliza modeloPoliza = new ModeloPoliza();
@@ -69,20 +76,24 @@ public class ControladorPersonasPoliza {
         con = conexion.abrirConexion();
         PreparedStatement SQL;
         modeloPesonas = controladorPersonas.SelectCedula(CedulaPersona);
-        if (modeloPesonas != null) {
+        if (modeloPesonas != null)
+        {
             modeloPersonasPolizas.setModeloPersonas(modeloPesonas);
             modeloGrupoPolizas = controladorGrupoPolizas.select("Select Id, IdPoliza, Descripcion, CodigoNomina, CodigoCorredor FROM grupo_poliza WHERE CodigoNomina = '" + CodigoPoliza + "'");
-            if (modeloGrupoPolizas != null) {
+            if (modeloGrupoPolizas != null)
+            {
                 modeloPersonasPolizas.setCodigoPoliza(modeloGrupoPolizas);
                 modeloPoliza = controladorPoliza.SelectCedulaa("SELECT `Id`, `Nombre` FROM `poliza` WHERE `Id` = " + modeloGrupoPolizas.getIdPoliza());
-                try {
+                try
+                {
                     SQL = con.prepareStatement("SELECT `Id`,`IdPersonas`,`IdPoliza`,`ValorPoliza`,"
                             + "`FechaInicio`,`FechaFin`,`Observacion`,  `Activo`, `CodigoPoliza` "
                             + "FROM `personas_poliza` WHERE `IdPersonas`= ? AND `IdPoliza`= ?;");
                     SQL.setInt(1, modeloPesonas.getId());
                     SQL.setInt(2, modeloPoliza.getId());
                     ResultSet res = SQL.executeQuery();
-                    if (res.next()) {
+                    if (res.next())
+                    {
                         //modeloPersonasPolizas = new ModeloPersonasPolizas();
                         modeloPersonasPolizas.setId(res.getInt("id"));
                         //modeloPersonasPolizas.setModeloPersonas(modeloPesonas);
@@ -93,20 +104,24 @@ public class ControladorPersonasPoliza {
                         modeloPersonasPolizas.setObservacion(res.getString("Observacion"));
                         modeloPersonasPolizas.setActivo(res.getString("Activo"));
                         //modeloPersonasPolizas.setCodigoPoliza(modeloGrupoPolizas);
-                    } else {
+                    } else
+                    {
                         modeloPersonasPolizas = null;
                     }
                     res.close();
                     SQL.close();
                     con.close();
-                } catch (SQLException e) {
+                } catch (SQLException e)
+                {
 
                 }
-            } else {
+            } else
+            {
                 //modeloPersonasPolizas = new ModeloPersonasPolizas();
                 modeloPersonasPolizas.setCodigoPoliza(null);
             }
-        } else {
+        } else
+        {
             //modeloPersonasPolizas = new ModeloPersonasPolizas();
             modeloPersonasPolizas.setModeloPersonas(null);
         }
@@ -119,7 +134,8 @@ public class ControladorPersonasPoliza {
         Connection con;
         con = conexion.abrirConexion();
         PreparedStatement SQL = null;
-        try {
+        try
+        {
             SQL = con.prepareStatement("UPDATE `personas_poliza`  SET "
                     + "`ValorPoliza` = ?, `IdPoliza` = ?,  "
                     + "  `Observacion` = ?,  `Activo` = ?, CodigoPoliza = ?"
@@ -131,12 +147,14 @@ public class ControladorPersonasPoliza {
             SQL.setString(4, modeloPersonasPolizas.getActivo());
             SQL.setInt(5, modeloPersonasPolizas.getCodigoPoliza().getId());
             SQL.setInt(6, modeloPersonasPolizas.getId());
-            if (SQL.executeUpdate() > 0) {
+            if (SQL.executeUpdate() > 0)
+            {
                 resul = true;
             }
             SQL.close();
             con.close();
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             System.out.println(e);
 
         }
@@ -149,15 +167,18 @@ public class ControladorPersonasPoliza {
         Connection con;
         con = conexion.abrirConexion();
         PreparedStatement SQL = null;
-        try {
+        try
+        {
             SQL = con.prepareStatement("DELETE FROM `personas_poliza` WHERE `Id` = ?;");
             SQL.setInt(1, modeloPersonasPolizas.getId());
-            if (SQL.executeUpdate() > 0) {
+            if (SQL.executeUpdate() > 0)
+            {
                 resul = true;
             }
             SQL.close();
             con.close();
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
 
         }
         return resul;
@@ -172,11 +193,13 @@ public class ControladorPersonasPoliza {
         ControladorPersonas controladorPersonas = new ControladorPersonas();
         ControladorPoliza controladorPoliza = new ControladorPoliza();
         ControladorGrupoPolizas controladorGrupoPolizas = new ControladorGrupoPolizas();
-        try {
+        try
+        {
             SQL = con.prepareStatement("SELECT `Id`,`IdPersonas`,`IdPoliza`,`ValorPoliza`,`FechaInicio`,"
                     + "`FechaFin`,`Observacion`,`Activo`,`CodigoPoliza`FROM `personas_poliza`;");
             ResultSet res = SQL.executeQuery();
-            while (res.next()) {
+            while (res.next())
+            {
                 ModeloPersonasPolizas modeloPersonasPoliza = new ModeloPersonasPolizas();
                 modeloPersonasPoliza.setId(res.getInt("id"));
                 modeloPersonasPoliza.setModeloPersonas(controladorPersonas.Select(res.getInt("IdPersonas")));
@@ -192,7 +215,8 @@ public class ControladorPersonasPoliza {
             res.close();
             SQL.close();
             con.close();
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
             System.out.println(e);
         }
         return modeloPersonasPolizas;
@@ -207,12 +231,14 @@ public class ControladorPersonasPoliza {
         ControladorPersonas controladorPersonas = new ControladorPersonas();
         ControladorPoliza controladorPoliza = new ControladorPoliza();
         ControladorGrupoPolizas controladorGrupoPolizas = new ControladorGrupoPolizas();
-        try {
+        try
+        {
             SQL = con.prepareStatement("SELECT `Id`,`IdPersonas`,`IdPoliza`,`ValorPoliza`,`FechaInicio`,"
                     + "`FechaFin`,`Observacion`,`Activo`,`CodigoPoliza`FROM `personas_poliza` WHERE Id = ?");
             SQL.setInt(1, CodigoBuscar);
             ResultSet res = SQL.executeQuery();
-            if (res.next()) {
+            if (res.next())
+            {
                 modeloPersonasPolizas.setId(res.getInt("id"));
                 modeloPersonasPolizas.setModeloPersonas(controladorPersonas.Select(res.getInt("IdPersonas")));
                 modeloPersonasPolizas.setModeloPoliza(controladorPoliza.Select(res.getInt("IdPoliza")));
@@ -226,13 +252,57 @@ public class ControladorPersonasPoliza {
             res.close();
             SQL.close();
             con.close();
-        } catch (SQLException e) {
+        } catch (SQLException e)
+        {
 
         }
         return modeloPersonasPolizas;
     }
 
-    ModeloPersonasPolizas SelectIdPersonaIdPoliza(String CedulaPersona, String CodigoPoliza) {
+    public String SelectIdPersonas(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("text/html;charset=UTF-8");
+        String out = null;
+        ModeloPersonasPolizas modeloPersonasPolizas = new ModeloPersonasPolizas();
+        ConexionBDMySql conexion = new ConexionBDMySql();
+        Connection con;
+        con = conexion.abrirConexion();
+        PreparedStatement SQL;
+        try
+        {
+            SQL = con.prepareStatement("SELECT "
+                    + "p.Id, "
+                    + "p.IdPersonas, "
+                    + "p.CodigoPoliza, "
+                    + "a.Id,"
+                    + "a.Descripcion "
+                    + "FROM personas_poliza p "
+                    + "JOIN `grupo_poliza` a "
+                    + "ON(p.CodigoPoliza = a.Id) "
+                    + "WHERE p.IdPersonas = ?");
+            String IdPersona = request.getParameter("idempleado");
+            SQL.setInt(1, Integer.valueOf(IdPersona));
+            ResultSet res = SQL.executeQuery();
+            out = "";
+            while (res.next())
+            {
+                String d1 = res.getString("p.CodigoPoliza");
+                String d2 = res.getString("a.Descripcion");
+                System.out.println(d1);
+                System.out.println(d2);
+                out += "<option value=" + d1 + ">" + d2 + "</option>";
+
+            }
+            res.close();
+            SQL.close();
+            con.close();
+        } catch (SQLException e)
+        {
+            System.out.println(e);
+        }
+        return out;
+    }
+
+    public ModeloPersonasPolizas SelectIdPersonaIdPoliza(String CedulaPersona, String CodigoPoliza) {
         ModeloPersonasPolizas modeloPersonasPolizas = new ModeloPersonasPolizas();
         ModeloPersonas modeloPesonas = new ModeloPersonas();
         ModeloPoliza modeloPoliza = new ModeloPoliza();
@@ -246,21 +316,25 @@ public class ControladorPersonasPoliza {
         con = conexion.abrirConexion();
         PreparedStatement SQL;
         modeloPesonas = controladorPersonas.SelectCedula(CedulaPersona);
-        if (modeloPesonas != null) {
+        if (modeloPesonas != null)
+        {
             modeloPersonasPolizas.setModeloPersonas(modeloPesonas);
             modeloGrupoPolizas = controladorGrupoPolizas.select("Select Id, IdPoliza, Descripcion, CodigoNomina, CodigoCorredor"
                     + " FROM grupo_poliza WHERE CodigoCorredor = '" + CodigoPoliza + "'");
-            if (modeloGrupoPolizas != null) {
+            if (modeloGrupoPolizas != null)
+            {
                 modeloPersonasPolizas.setCodigoPoliza(modeloGrupoPolizas);
                 modeloPoliza = controladorPoliza.SelectCedulaa("SELECT `Id`, `Nombre` FROM `poliza` WHERE `Id` = " + modeloGrupoPolizas.getIdPoliza());
-                try {
+                try
+                {
                     SQL = con.prepareStatement("SELECT `Id`,`IdPersonas`,`IdPoliza`,`ValorPoliza`,"
                             + "`FechaInicio`,`FechaFin`,`Observacion`,  `Activo`, `CodigoPoliza` "
                             + "FROM `personas_poliza` WHERE `IdPersonas`= ? AND `IdPoliza`= ?;");
                     SQL.setInt(1, modeloPesonas.getId());
                     SQL.setInt(2, modeloPoliza.getId());
                     ResultSet res = SQL.executeQuery();
-                    if (res.next()) {
+                    if (res.next())
+                    {
                         //modeloPersonasPolizas = new ModeloPersonasPolizas();
                         modeloPersonasPolizas.setId(res.getInt("id"));
                         //modeloPersonasPolizas.setModeloPersonas(modeloPesonas);
@@ -278,22 +352,23 @@ public class ControladorPersonasPoliza {
                     SQL.close();
                     con.close();
 
-                } catch (SQLException e) {
+                } catch (SQLException e)
+                {
                     System.out.println(e);
                 }
-            } else {
+            } else
+            {
                 //modeloPersonasPolizas = new ModeloPersonasPolizas();
                 modeloPersonasPolizas.setCodigoPoliza(null);
             }
-        } else {
+        } else
+        {
             //modeloPersonasPolizas = new ModeloPersonasPolizas();
             modeloPersonasPolizas.setModeloPersonas(null);
         }
         return modeloPersonasPolizas;
     }
-    
-    
-    
+
     ModeloPersonasPolizas SelectPersonaPoliza(String CedulaPersona, String SqlCodigoPlano) {
         ModeloPersonasPolizas modeloPersonasPolizas = new ModeloPersonasPolizas();
         ModeloPersonas modeloPesonas = new ModeloPersonas();
@@ -308,21 +383,25 @@ public class ControladorPersonasPoliza {
         con = conexion.abrirConexion();
         PreparedStatement SQL;
         modeloPesonas = controladorPersonas.SelectCedula(CedulaPersona);
-        if (modeloPesonas != null) {
+        if (modeloPesonas != null)
+        {
             modeloPersonasPolizas.setModeloPersonas(modeloPesonas);
             //modeloGrupoPolizas = controladorGrupoPolizas.select("Select Id, IdPoliza, Descripcion, CodigoNomina, CodigoCorredor FROM grupo_poliza WHERE CodigoNomina = '" + CodigoPoliza + "'");
             modeloGrupoPolizas = controladorGrupoPolizas.select(SqlCodigoPlano);
-            if (modeloGrupoPolizas != null) {
+            if (modeloGrupoPolizas != null)
+            {
                 modeloPersonasPolizas.setCodigoPoliza(modeloGrupoPolizas);
                 modeloPoliza = controladorPoliza.SelectCedulaa("SELECT `Id`, `Nombre` FROM `poliza` WHERE `Id` = " + modeloGrupoPolizas.getIdPoliza());
-                try {
+                try
+                {
                     SQL = con.prepareStatement("SELECT `Id`,`IdPersonas`,`IdPoliza`,`ValorPoliza`,"
                             + "`FechaInicio`,`FechaFin`,`Observacion`,  `Activo`, `CodigoPoliza` "
                             + "FROM `personas_poliza` WHERE `IdPersonas`= ? AND `IdPoliza`= ?;");
                     SQL.setInt(1, modeloPesonas.getId());
                     SQL.setInt(2, modeloPoliza.getId());
                     ResultSet res = SQL.executeQuery();
-                    if (res.next()) {
+                    if (res.next())
+                    {
                         //modeloPersonasPolizas = new ModeloPersonasPolizas();
                         modeloPersonasPolizas.setId(res.getInt("id"));
                         //modeloPersonasPolizas.setModeloPersonas(modeloPesonas);
@@ -333,29 +412,76 @@ public class ControladorPersonasPoliza {
                         modeloPersonasPolizas.setObservacion(res.getString("Observacion"));
                         modeloPersonasPolizas.setActivo(res.getString("Activo"));
                         //modeloPersonasPolizas.setCodigoPoliza(modeloGrupoPolizas);
-                    } else {
+                    } else
+                    {
                         modeloPersonasPolizas = null;
                     }
                     res.close();
                     SQL.close();
                     con.close();
-                } catch (SQLException e) {
+                } catch (SQLException e)
+                {
 
                 }
-            } else {
+            } else
+            {
                 //modeloPersonasPolizas = new ModeloPersonasPolizas();
                 modeloPersonasPolizas.setCodigoPoliza(null);
             }
-        } else {
+        } else
+        {
             //modeloPersonasPolizas = new ModeloPersonasPolizas();
             modeloPersonasPolizas.setModeloPersonas(null);
         }
         return modeloPersonasPolizas;
     }
-    
-    
-    
-    
-    
-    
+
+    public ModeloPersonasPolizas SelectIdPersonaPoliza(int idPersona, String CodigoPoliza) {
+        ModeloPersonasPolizas modeloPersonasPolizas = new ModeloPersonasPolizas();
+        ConexionBDMySql conexion = new ConexionBDMySql();
+        Connection con;
+        con = conexion.abrirConexion();
+        PreparedStatement SQL;
+        ControladorPersonas controladorPersonas = new ControladorPersonas();
+        ControladorPoliza controladorPoliza = new ControladorPoliza();
+        ControladorGrupoPolizas controladorGrupoPolizas = new ControladorGrupoPolizas();
+        try
+        {
+            SQL = con.prepareStatement("SELECT `"
+                    + "Id`,"
+                    + "`IdPersonas`,"
+                    + "`IdPoliza`,"
+                    + "`ValorPoliza`,"
+                    + "`FechaInicio`,"
+                    + "`FechaFin`,"
+                    + "`Observacion`,"
+                    + "`Activo`,"
+                    + "`CodigoPoliza`"
+                    + "FROM `personas_poliza` "
+                    + "WHERE IdPersonas = ? AND `CodigoPoliza` = ?;");
+            SQL.setInt(1, idPersona);
+            SQL.setString(2, CodigoPoliza);
+            ResultSet res = SQL.executeQuery();
+            if (res.next())
+            {
+                modeloPersonasPolizas.setId(res.getInt("id"));
+                modeloPersonasPolizas.setModeloPersonas(controladorPersonas.Select(res.getInt("IdPersonas")));
+                modeloPersonasPolizas.setModeloPoliza(controladorPoliza.Select(res.getInt("IdPoliza")));
+                modeloPersonasPolizas.setValorPoliza(res.getString("ValorPoliza"));
+                modeloPersonasPolizas.setFechaInicio(res.getString("FechaInicio"));
+                modeloPersonasPolizas.setFechaFin(res.getString("FechaFin"));
+                modeloPersonasPolizas.setObservacion(res.getString("Observacion"));
+                modeloPersonasPolizas.setActivo(res.getString("Activo"));
+                modeloPersonasPolizas.setCodigoPoliza(controladorGrupoPolizas.select("SELECT Id, IdPoliza, Descripcion, CodigoNomina, CodigoCorredor FROM grupo_poliza where Id =" + res.getInt("CodigoPoliza")));
+            }
+            res.close();
+            SQL.close();
+            con.close();
+        } catch (SQLException e)
+        {
+            System.out.println("Error sentencia SQL " + e);
+        }
+        return modeloPersonasPolizas;
+    }
+
 }

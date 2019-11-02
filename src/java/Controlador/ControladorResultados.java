@@ -98,6 +98,7 @@ public class ControladorResultados {
                     }
                 }
             }
+            brPerReader.close();
             if (Errores.contentEquals("")) {
                 resul = CargaPlanoCorredorValidado(RutaDispo);
             } else {
@@ -198,6 +199,7 @@ public class ControladorResultados {
                     }
                 }
             }
+            brPerReader.close();
         } catch (IOException e) {
             System.out.println("Error: " + e);
             resul = "Error";
@@ -271,7 +273,7 @@ public class ControladorResultados {
                     }
                 }
             }
-
+brPerReader.close();
             if (Errores.contentEquals("")) {
                 resul = CargaNominaValidado(RutaDispo);
             } else {
@@ -387,6 +389,7 @@ public class ControladorResultados {
                 }
 
             }
+            brPerReader.close();
         } catch (IOException e) {
             System.out.println("Error: " + e);
             resul = "Error";
@@ -414,6 +417,7 @@ public class ControladorResultados {
                     listModeloResultados.add(modeloResultados);
                 }
             }
+            brPerReader.close();
         } catch (IOException e) {
             System.out.println(e);
         }

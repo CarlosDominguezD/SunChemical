@@ -17,9 +17,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.util.Calendar;
-import java.util.StringTokenizer;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
@@ -154,19 +153,36 @@ public class CargarPlanoServlet extends HttpServlet {
             System.out.println(tamanorequies);
 
             Part arch = request.getPart("archivo");
-            String nombre = arch.getName();
+            //String nombre = arch.getName();
             String formato = request.getParameter("Formato");
-            InputStream is = arch.getInputStream();
+            //InputStream is = arch.getInputStream();
             String RutaDispo = "C:\\Zred\\SunChemical\\" + formato + " " + ObtenerFecha() + ".txt";
             File f = new File(RutaDispo);
-            FileOutputStream ous = new FileOutputStream(f);
-            int dato = is.read();
-            while (dato != -1) {
-                ous.write(dato);
-                dato = is.read();
+            if (f.exists())
+            {
+                f.delete();
             }
-            ous.close();
-            is.close();
+            try (InputStream input = arch.getInputStream())
+            {
+                Files.copy(input, f.toPath()); 
+                input.close();
+                //f.exists();                
+            }
+            catch(IOException e)
+            {
+                System.out.println(e);                
+            }
+            
+            
+            
+//            FileOutputStream ous = new FileOutputStream(f);
+//            int dato = is.read();
+//            while (dato != -1) {
+//                ous.write(dato);
+//                dato = is.read();
+//            }
+//            ous.close();
+//            is.close();
             String total = "0";
             String totalTrue = "0";
             String totalFalse = "0";
@@ -190,6 +206,10 @@ public class CargarPlanoServlet extends HttpServlet {
             }
             request.setAttribute("espuesta", respuesta);
             processRequest(request, response);
+
+
+
+
 //            response.setCharacterEncoding("UTF-8");
 //            response.setContentType("text/plain");
 //            response.getWriter().write(respuesta);

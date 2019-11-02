@@ -218,7 +218,7 @@ public class ControladorMeses {
             con.close();
         } catch (SQLException e)
         {
-
+            System.out.println("Error Modelo Meses SELECT " + e);
         }
         return modeloMeses;
     }
