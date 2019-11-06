@@ -87,8 +87,19 @@ public class ServletSunchemical extends HttpServlet {
             case "EliminarPeriodo":
                 ControladorEliminarPeriodo controladorEliminarPeriodo = new ControladorEliminarPeriodo();
                 res = controladorEliminarPeriodo.DeletePeriodo(request, response);
-                request.setAttribute("espuesta", res);
-                processRequest(request, response);
+                if ("true".equals(res))
+                {
+                    res = "Periodo Eliminado";
+                }
+                else
+                {
+                    res = "Error al eliminado el Periodo";
+                }
+                response.setCharacterEncoding("UTF-8");
+                response.setContentType("text/plain");
+                response.getWriter().write(res);
+//                request.setAttribute("espuesta", res);
+//                processRequest(request, response);
                 break;
             case "ConsultarPoliza":
                 //ControladorPersonasPoliza controladorPersonasPoliza = new ControladorPersonasPoliza();

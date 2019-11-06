@@ -16,7 +16,7 @@ $(function () {
             data: data,
             success: function (resul, textStatus, jqXHR)
             {
-                disableGif();
+                //disableGif();
                 alert(resul);
                 LimpiarCampos();
                 LoadTabla();
